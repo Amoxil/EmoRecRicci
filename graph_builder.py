@@ -32,9 +32,9 @@ class GraphBuilder:
     def computeRicci(self, graph):
 
         #Computes Ricci curv
-        frc = FormanRicci(graph)
-        frc.compute_ricci_curvature()
-        return graph
+        ricciCurvGraph = FormanRicci(graph)
+        ricciCurvGraph.compute_ricci_curvature()
+        return ricciCurvGraph
 
     def showGraph(self, image):
 
@@ -42,13 +42,12 @@ class GraphBuilder:
         
         nodesPositions = networkx.get_node_attributes(graph,"pos")
 
-        for node in graph.nodes:
-            neighbors = graph.neighbors(node)
-            if(neighbors!= None):
-                for neighbor in neighbors:
-                    cv2.line(image,nodesPositions[node],nodesPositions[neighbor],(255,0,0),1)
-                    cv2.circle(image, nodesPositions[node], 2, (0,0,0))
-                    cv2.putText(image, str(node), nodesPositions[node], 0, 0.4, (0,0,0))
+        for baseEdge in baseEdges:
+            cv2.line(image, nodesPositions[baseEdge[0]], nodesPositions[baseEdge[1]], (0,0,255), 1)
+
+        for baseLandmark in baseLandmarks:
+            cv2.circle(image, nodesPositions[baseLandmark], 2, (0,0,0))
+            cv2.putText(image, str(baseLandmark), nodesPositions[baseLandmark], 0, 0.5, (255,0,0))
 
         cv2.imshow("image",image)
         cv2.waitKey(0)
