@@ -29,7 +29,9 @@ class GraphBuilder:
         
         return graph
 
-    def computeRicci(self, graph):
+    def computeRicci(self, image):
+
+        graph = self.buildGraph(image)
 
         #Computes Ricci curv
         ricciCurvGraph = FormanRicci(graph)

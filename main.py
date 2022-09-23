@@ -9,4 +9,6 @@ print(graph)
 
 nodesPositions = networkx.get_node_attributes(graph,"pos")
 
-graphBuilder.showGraph(image)
+ricciCurvGraph = graphBuilder.computeRicci(image)
+print(ricciCurvGraph.G[37][267]["formanCurvature"])
+
