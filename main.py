@@ -1,14 +1,14 @@
-from graph_builder import GraphBuilder
+import ricci_graph_builder
 import networkx
 import cv2
 
 image = cv2.imread("face.png")
-graphBuilder = GraphBuilder()
-graph = graphBuilder.buildGraph(image)
+
+graph = ricci_graph_builder.buildGraph(image)
 print(graph)
 
-nodesPositions = networkx.get_node_attributes(graph,"pos")
+ricci_graph_builder.showGraph(image)
 
-ricciCurvGraph = graphBuilder.computeRicci(image)
+ricciCurvGraph = ricci_graph_builder.buildFormanRicciGraph(image)
 print(ricciCurvGraph.G[37][267]["formanCurvature"])
 
