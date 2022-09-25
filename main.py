@@ -1,4 +1,5 @@
 import ricci_graph_builder
+import ricci_feature_extraction
 import networkx
 import cv2
 
@@ -11,4 +12,6 @@ ricci_graph_builder.showGraph(image)
 
 ricciCurvGraph = ricci_graph_builder.buildFormanRicciGraph(image)
 print(ricciCurvGraph.G[37][267]["formanCurvature"])
+
+
 
