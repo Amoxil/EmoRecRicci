@@ -2,16 +2,10 @@ import ricci_graph_builder
 import ricci_feature_extraction
 import networkx
 import cv2
+import pandas
 
-image = cv2.imread("face.png")
-
-graph = ricci_graph_builder.buildGraph(image)
-print(graph)
-
-ricci_graph_builder.showGraph(image)
-
-ricciCurvGraph = ricci_graph_builder.buildFormanRicciGraph(image)
-print(ricciCurvGraph.G[37][267]["formanCurvature"])
+dataFrame = ricci_feature_extraction.extractFeatureFrom("C:\\Users\\Raffocs\\Desktop\\reducedAffectNet", ["anger", "contempt", "disgust", "fear", "happy", "sad", "neutral", "surprise"])
+print(dataFrame)
 
 
 

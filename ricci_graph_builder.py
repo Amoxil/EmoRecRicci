@@ -1,3 +1,4 @@
+from types import NoneType
 import mediapipe
 import math
 import networkx
@@ -9,10 +10,13 @@ def buildGraph(image):
     height, width, _ = image.shape
     faceModule = mediapipe.solutions.face_mesh
     processedImage = faceModule.FaceMesh(static_image_mode=True).process(image)
+    if(processedImage.multi_face_landmarks is None):
+        return
     graph = networkx.Graph()
 
     #Adds node to the graph
     for faceLandmark in FACE_LANDMARKS:
+        #print("have this landmark!!! HYA!!" + landmark)
         landmark =  processedImage.multi_face_landmarks[0].landmark[faceLandmark]
         pos = (int(landmark.x * width), int(landmark.y * height))
         graph.add_node(faceLandmark, pos=pos)
@@ -28,7 +32,8 @@ def buildGraph(image):
 def buildFormanRicciGraph(image):
 
     graph = buildGraph(image)
-
+    if(graph is None):
+        return
     #Computes Forman-Ricci curv
     ricciCurvGraph = FormanRicci(graph)
     ricciCurvGraph.compute_ricci_curvature()
@@ -37,7 +42,8 @@ def buildFormanRicciGraph(image):
 def buildOllivierRicciGraph(image):
 
     graph = buildGraph(image)
-
+    if(graph is None):
+        return
     #Computes Ollivier-Ricci curv
     ricciCurvGraph = OllivierRicci(graph)
     ricciCurvGraph.compute_ricci_curvature()
@@ -46,6 +52,9 @@ def buildOllivierRicciGraph(image):
 def showGraph(image):
 
     graph = buildGraph(image)
+
+    if(graph is None):
+        return
     
     nodesPositions = networkx.get_node_attributes(graph,"pos")
 
