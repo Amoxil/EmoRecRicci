@@ -7,7 +7,7 @@ from ricci_graph_builder import FACE_EDGES as edges
 
 def extractFeatureFrom(dir, labels):
 
-    #labels are not actually aligned with the data, columns=edges.union(["label"]) is just for sizing purpuses, will get removed in csv
+    #edges are not actually aligned with the data, columns=edges.union(["label"]) is just for sizing purpuses, will get removed in csv
     ricciData = pandas.DataFrame(columns=edges.union(["label"])) 
     row = []
 
