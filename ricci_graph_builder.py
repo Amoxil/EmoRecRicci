@@ -25,8 +25,12 @@ def buildGraph(image):
 
     #Adds edges to the graph
     for faceEdge in FACE_EDGES:
-        graph.add_edge(faceEdge[0],faceEdge[1], weight = math.dist(nodesPosition[faceEdge[0]], nodesPosition[faceEdge[1]]))   
-    
+        weight = math.dist(nodesPosition[faceEdge[0]], nodesPosition[faceEdge[1]])
+        if(weight != 0):
+            graph.add_edge(faceEdge[0],faceEdge[1], weight = weight)   
+        else:
+            graph.add_edge(faceEdge[0],faceEdge[1], weight = 0.00001)   
+
     return graph
 
 def buildFormanRicciGraph(image):
