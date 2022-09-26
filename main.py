@@ -4,7 +4,7 @@ import networkx
 import cv2
 import pandas
 
-dataFrame = ricci_feature_extraction.extractFeatureFrom("C:\\Users\\Raffocs\\Desktop\\reducedAffectNet", ["anger", "contempt", "disgust", "fear", "happy", "sad", "neutral", "surprise"])
+dataFrame = ricci_feature_extraction.extractFeatureFrom("C:\\Users\\Raffocs\\Desktop\\CK+", ["anger", "contempt", "disgust", "fear", "happy", "sadness", "surprise"])
 print(dataFrame)
 
 
