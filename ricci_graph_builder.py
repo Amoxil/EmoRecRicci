@@ -35,7 +35,11 @@ def buildGraph(image):
 
 def buildFormanRicciGraph(image):
 
+    if(image is None):
+        return
+
     graph = buildGraph(image)
+
     if(graph is None):
         return
     #Computes Forman-Ricci curv
@@ -45,7 +49,11 @@ def buildFormanRicciGraph(image):
 
 def buildOllivierRicciGraph(image):
 
+    if(image is None):
+        return
+
     graph = buildGraph(image)
+    
     if(graph is None):
         return
     #Computes Ollivier-Ricci curv

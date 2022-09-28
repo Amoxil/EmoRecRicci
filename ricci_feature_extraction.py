@@ -11,7 +11,7 @@ def extractFeatureFrom(dir, labels):
     row = []
 
     #edges are not actually aligned with the data, columns=edges.union(["label"]) is just for sizing purpuses, will get removed in csv
-    ricciData = pandas.DataFrame(columns=edges.union(["label"])) 
+    ricciCurvData = pandas.DataFrame(columns=edges.union(["label"])) 
     i=0
 
     for label in labels:
@@ -27,16 +27,16 @@ def extractFeatureFrom(dir, labels):
                 for edge in edges:
                     row.append(graph.G[edge[0]][edge[1]]["formanCurvature"])
                 row.append(label)
-                ricciData.loc[image] = row
+                ricciCurvData.loc[image] = row
                 row.clear()
             
             i=i+1
            
             if(i > 250): 
-                ricciData.to_csv('data.csv', mode='a', header=False,index=False)
-                ricciData = ricciData.iloc[0:0]
+                ricciCurvData.to_csv('data.csv', mode='a', header=False,index=False)
+                ricciCurvData = ricciCurvData.iloc[0:0]
                 i = 0
     
-    ricciData.to_csv('data.csv', mode='a', header=False,index=False)
+    ricciCurvData.to_csv('data.csv', mode='a', header=False,index=False)
 
     
