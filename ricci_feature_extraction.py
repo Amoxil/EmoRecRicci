@@ -10,10 +10,11 @@ def extractFeatureFrom(dir, labels):
 
     row = []
 
-    #edges are not actually aligned with the data, columns=edges.union(["label"]) is just for sizing purpuses, will get removed in csv
+    #Edges are not actually aligned with the data, columns=edges.union(["label"]) is just for sizing purpuses, will get removed in csv
     ricciCurvData = pandas.DataFrame(columns=edges.union(["label"])) 
     i=0
 
+    #Builds path for each label + image
     for label in labels:
         path = os.path.join(dir, label)
 
@@ -23,6 +24,7 @@ def extractFeatureFrom(dir, labels):
             print("Computing: " + image + "...")
             graph = ricci_graph_builder.buildFormanRicciGraph(currImage)
 
+            #Appends all edges in a row with the relative label and inserts it in a DataFrame
             if(graph is not None):
                 for edge in edges:
                     row.append(graph.G[edge[0]][edge[1]]["formanCurvature"])
