@@ -6,6 +6,9 @@ import cv2
 from GraphRicciCurvature.FormanRicci import FormanRicci
 from GraphRicciCurvature.OllivierRicci import OllivierRicci
 
+def manhattanDist(a, b):
+    return sum(abs(val1-val2) for val1, val2 in zip(a,b))
+
 def buildGraph(image):
     height, width, _ = image.shape
     faceModule = mediapipe.solutions.face_mesh
@@ -25,7 +28,8 @@ def buildGraph(image):
 
     #Adds edges to the graph
     for faceEdge in FACE_EDGES:
-        weight = math.dist(nodesPosition[faceEdge[0]], nodesPosition[faceEdge[1]])
+        #weight = math.dist(nodesPosition[faceEdge[0]], nodesPosition[faceEdge[1]])
+        weight = manhattanDist(nodesPosition[faceEdge[0]], nodesPosition[faceEdge[1]])
         if(weight != 0):
             graph.add_edge(faceEdge[0],faceEdge[1], weight = weight)   
         else:
