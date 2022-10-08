@@ -1,14 +1,16 @@
 from ctypes import sizeof
 import os
+import shutil
 import ricci_graph_builder
 import pandas
 import cv2
-import gc
 from ricci_graph_builder import FACE_EDGES as edges
 
 def extractFeatureFrom(dir, labels):
 
     row = []
+    if not os.path.exists(os.path.join(dir, "err")):
+        os.makedirs(os.path.join(dir, "err"))
 
     #Edges are not actually aligned with the data, columns=edges.union(["label"]) is just for sizing purpuses, will get removed in csv
     ricciCurvData = pandas.DataFrame(columns=edges.union(["label"])) 
@@ -31,14 +33,16 @@ def extractFeatureFrom(dir, labels):
                 row.append(label)
                 ricciCurvData.loc[image] = row
                 row.clear()
+            else:
+                shutil.copy(os.path.join(path, image), os.path.join(dir, "err", image))
             
             i=i+1
            
             if(i > 250): 
-                ricciCurvData.to_csv('data.csv', mode='a', header=False,index=False)
+                ricciCurvData.to_csv('data.csv', mode='a', header=False)
                 ricciCurvData = ricciCurvData.iloc[0:0]
                 i = 0
     
-    ricciCurvData.to_csv('data.csv', mode='a', header=False,index=False)
+    ricciCurvData.to_csv('data.csv', mode='a', header=False)
 
     
