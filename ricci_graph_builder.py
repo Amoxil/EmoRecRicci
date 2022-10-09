@@ -33,7 +33,7 @@ def buildGraph(image):
         if(weight != 0):
             graph.add_edge(faceEdge[0],faceEdge[1], weight = weight)   
         else:
-            graph.add_edge(faceEdge[0],faceEdge[1], weight = 0.00001)   
+            return 
 
     return graph
 
