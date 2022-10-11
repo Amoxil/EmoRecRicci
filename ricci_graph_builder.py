@@ -3,6 +3,7 @@ import mediapipe
 import math
 import networkx
 import cv2
+from scipy.spatial import distance
 from GraphRicciCurvature.FormanRicci import FormanRicci
 from GraphRicciCurvature.OllivierRicci import OllivierRicci
 
@@ -28,8 +29,9 @@ def buildGraph(image):
 
     #Adds edges to the graph
     for faceEdge in FACE_EDGES:
-        #weight = math.dist(nodesPosition[faceEdge[0]], nodesPosition[faceEdge[1]])
-        weight = manhattanDist(nodesPosition[faceEdge[0]], nodesPosition[faceEdge[1]])
+        weight = math.dist(nodesPosition[faceEdge[0]], nodesPosition[faceEdge[1]])
+        #weight = manhattanDist(nodesPosition[faceEdge[0]], nodesPosition[faceEdge[1]])
+        #weight = distance.cosine(nodesPosition[faceEdge[0]], nodesPosition[faceEdge[1]])
         if(weight != 0):
             graph.add_edge(faceEdge[0],faceEdge[1], weight = weight)   
         else:
