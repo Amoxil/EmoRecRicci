@@ -1,10 +1,10 @@
 from ctypes import sizeof
 import os
 import shutil
-import ricci_graph_builder
+import graph_builder_mp
 import pandas
 import cv2
-from ricci_graph_builder import FACE_EDGES as edges
+from graph_builder_mp import FACE_EDGES as edges
 
 def extractFeatureFrom(dir, labels):
 
@@ -24,7 +24,7 @@ def extractFeatureFrom(dir, labels):
 
             currImage = cv2.imread(os.path.join(path, image))
             print("Computing: " + image + "...")
-            graph = ricci_graph_builder.buildFormanRicciGraph(currImage)
+            graph = graph_builder_mp.buildFormanRicciGraph(currImage)
 
             #Appends all edges in a row with the relative label and inserts it in a DataFrame
             if(graph is not None):
@@ -44,5 +44,6 @@ def extractFeatureFrom(dir, labels):
                 i = 0
     
     ricciCurvData.to_csv('data.csv', mode='a', header=False)
+    
 
     

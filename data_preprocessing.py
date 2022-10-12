@@ -3,7 +3,6 @@ import os
 import pandas
 import numpy
 from sklearn.preprocessing import MinMaxScaler
-from ricci_graph_builder import FACE_EDGES
 
 def processImages(dir, labels):
     face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_default.xml')
@@ -42,7 +41,7 @@ def processImages(dir, labels):
                     image.split()
                     cv2.imwrite(imagePath, resizedImage)
 
-def normalizeDf(df):
+def normalizeDf(df, edges):
     #BE SURE TO REMOVE DATAFRAME HEADER!!! (Or first entry will not be considered)
     images = df.iloc[:, :1]
     norm = df.iloc[: , 1:-1]
@@ -52,7 +51,7 @@ def normalizeDf(df):
     scaler = MinMaxScaler()
     #print(norm)
     norm = scaler.fit_transform(norm)
-    norm = pandas.DataFrame(norm, columns=numpy.arange(len(FACE_EDGES)))
+    norm = pandas.DataFrame(norm, columns=numpy.arange(len(edges)))
     #print(images)
     result = pandas.concat([images, norm], axis=1, join="inner")
     result = pandas.concat([result, label], axis=1, join="inner")
