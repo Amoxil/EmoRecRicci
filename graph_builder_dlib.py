@@ -1,5 +1,3 @@
-from selectors import DefaultSelector
-import dlib
 import math
 import networkx
 import cv2
@@ -12,7 +10,7 @@ import dlib
 def buildGraph(image):
     
     detector = dlib.get_frontal_face_detector()
-    lm_predictor = dlib.shape_predictor("ASM/shape_predictor_68_face_landmarks.dat")
+    lm_predictor = dlib.shape_predictor("shape_predictor/shape_predictor_68_face_landmarks.dat")
 
     faces = detector(image)
    
@@ -52,7 +50,7 @@ def showGraph(image):
 
     for faceLandmark in FACE_LANDMARKS:
         cv2.circle(image, nodesPositions[faceLandmark], 2, (0,0,0))
-        cv2.putText(image, str(faceLandmark), nodesPositions[faceLandmark], 0, 0.5, (255,0,0))
+        cv2.putText(image, str(faceLandmark), nodesPositions[faceLandmark], 0, 0.25, (255,0,0))
 
     cv2.imshow("image",image)
     cv2.waitKey(0)

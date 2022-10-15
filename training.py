@@ -33,7 +33,7 @@ def trainTestKFold(data):
     """
     kfResults = cross_val_score(estimator=classifier, X=df, y=labels.values.ravel(), scoring="accuracy", cv=kFold)
     print(kfResults)
-    print(kfResults.mean())
+    print("K-Fold cv accuracy:" + str(kfResults.mean()))
 
 def trainTestStratKFold(data):
 
@@ -47,7 +47,7 @@ def trainTestStratKFold(data):
 
     kfResults = cross_val_score(estimator=classifier, X=df, y=labels.values.ravel(), scoring="accuracy", cv=stratKFold)
     print(kfResults)
-    print(kfResults.mean())
+    print("Stratified K-Fold cv accuracy: " + str(kfResults.mean()))
 
 def trainTestRepeatKFold(data):
 
@@ -60,7 +60,7 @@ def trainTestRepeatKFold(data):
   
     kfResults = cross_val_score(estimator=classifier, X=df, y=labels.values.ravel(), scoring="accuracy", cv=repKFold)
     print(kfResults)
-    print(kfResults.mean())
+    print("Reapeated K-Fold cv accuracy: " + str(kfResults.mean()))
 
 def trainTestLoocv(data):
 
@@ -75,7 +75,7 @@ def trainTestLoocv(data):
     print("I'm a really slow pc but i'm computing, gimme time D:")
     loocvResults = cross_val_score(estimator=classifier, X=df, y=labels.values.ravel(), scoring='accuracy', cv=looCV)
     print(loocvResults)
-    print(loocvResults.mean())
+    print("Leave one out cv accuracy: " + str(loocvResults.mean()))
 
 def trainTestHoldOut(data):
 
@@ -90,6 +90,6 @@ def trainTestHoldOut(data):
     classifier.fit(dfTrain, labelsTrain.values.ravel())
     predictions = classifier.predict(dfTest)
     accuracy = accuracy_score(labelsTest, predictions)
-    print(accuracy)
+    print("Hold out accuracy: " + str(accuracy))
     
     
