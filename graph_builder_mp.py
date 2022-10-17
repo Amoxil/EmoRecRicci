@@ -6,10 +6,7 @@ from scipy.spatial import distance
 from GraphRicciCurvature.FormanRicci import FormanRicci
 from GraphRicciCurvature.OllivierRicci import OllivierRicci
 
-def manhattanDist(a, b):
-    return sum(abs(val1-val2) for val1, val2 in zip(a,b))
-
-def buildGraph(image):
+def buildGraph(image, distType):
     height, width, _ = image.shape
     faceModule = mediapipe.solutions.face_mesh
     processedImage = faceModule.FaceMesh(static_image_mode=True).process(image)
@@ -28,9 +25,20 @@ def buildGraph(image):
 
     #Adds edges to the graph
     for faceEdge in FACE_EDGES:
-        #weight = math.dist(nodesPosition[faceEdge[0]], nodesPosition[faceEdge[1]])
-        #weight = manhattanDist(nodesPosition[faceEdge[0]], nodesPosition[faceEdge[1]])
-        weight = distance.cosine(nodesPosition[faceEdge[0]], nodesPosition[faceEdge[1]])
+
+        match distType:
+            case 'manhattan':
+                weight = distance.cityblock(nodesPosition[faceEdge[0]], nodesPosition[faceEdge[1]])
+            case 'euclidean':
+                weight = distance.euclidean(nodesPosition[faceEdge[0]], nodesPosition[faceEdge[1]])
+            case 'cosine':
+                weight = distance.cosine(nodesPosition[faceEdge[0]], nodesPosition[faceEdge[1]])
+            case 'chebyshev':
+                weight = distance.chebyshev(nodesPosition[faceEdge[0]], nodesPosition[faceEdge[1]])
+            case _:
+                    weight = distance.euclidean(nodesPosition[faceEdge[0]], nodesPosition[faceEdge[1]])
+
+
         if(weight != 0):
             graph.add_edge(faceEdge[0],faceEdge[1], weight = weight)   
         else:
@@ -38,12 +46,12 @@ def buildGraph(image):
 
     return graph
 
-def buildFormanRicciGraph(image):
+def buildFormanRicciGraph(image, distType):
 
     if(image is None):
         return
 
-    graph = buildGraph(image)
+    graph = buildGraph(image, distType)
 
     if(graph is None):
         return
@@ -52,12 +60,12 @@ def buildFormanRicciGraph(image):
     ricciCurvGraph.compute_ricci_curvature()
     return ricciCurvGraph
 
-def buildOllivierRicciGraph(image):
+def buildOllivierRicciGraph(image, distType):
 
     if(image is None):
         return
 
-    graph = buildGraph(image)
+    graph = buildGraph(image, distType)
     
     if(graph is None):
         return
@@ -68,7 +76,7 @@ def buildOllivierRicciGraph(image):
 
 def showGraph(image):
 
-    graph = buildGraph(image)
+    graph = buildGraph(image, "euclidean")
 
     if(graph is None):
         return
