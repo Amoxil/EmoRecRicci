@@ -9,13 +9,12 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, KFold, cross_val_score, LeaveOneOut, StratifiedKFold, RepeatedKFold
 from sklearn.metrics import accuracy_score
 
-def trainTestKFold(data):
+def trainTestKFold(data, classifier):
 
     
     kFold = KFold(n_splits=10)
     ricciCurvData = pandas.read_csv(data, header=None)
-    print(ricciCurvData)
-    classifier = RandomForestClassifier(n_estimators=50, random_state=1)
+    #print(ricciCurvData)
     df = ricciCurvData.iloc[: , 1:-1]
     labels = ricciCurvData.iloc[:,-1:]
 
@@ -32,64 +31,63 @@ def trainTestKFold(data):
     print(numpy.array(scores).mean())
     """
     kfResults = cross_val_score(estimator=classifier, X=df, y=labels.values.ravel(), scoring="accuracy", cv=kFold)
-    print(kfResults)
+    #print(kfResults)
     print("K-Fold cv accuracy:" + str(kfResults.mean()))
 
-def trainTestStratKFold(data):
+def trainTestStratKFold(data, classifier):
 
     
     stratKFold = StratifiedKFold(n_splits=10)
     ricciCurvData = pandas.read_csv(data, header=None)
-    print(ricciCurvData)
-    classifier = RandomForestClassifier(n_estimators=50, random_state=1)
+    #print(ricciCurvData)
     df = ricciCurvData.iloc[: , 1:-1]
     labels = ricciCurvData.iloc[:,-1:]
 
     kfResults = cross_val_score(estimator=classifier, X=df, y=labels.values.ravel(), scoring="accuracy", cv=stratKFold)
-    print(kfResults)
+    #print(kfResults)
     print("Stratified K-Fold cv accuracy: " + str(kfResults.mean()))
 
-def trainTestRepeatKFold(data):
+def trainTestRepeatKFold(data, classifier):
 
     repKFold = RepeatedKFold(n_splits=10, n_repeats=10)
     ricciCurvData = pandas.read_csv(data, header=None)
-    print(ricciCurvData)
-    classifier = RandomForestClassifier(n_estimators=50, random_state=1)
+    #print(ricciCurvData)
     df = ricciCurvData.iloc[: , 1:-1]
     labels = ricciCurvData.iloc[:,-1:]
   
     kfResults = cross_val_score(estimator=classifier, X=df, y=labels.values.ravel(), scoring="accuracy", cv=repKFold)
-    print(kfResults)
+    #print(kfResults)
     print("Reapeated K-Fold cv accuracy: " + str(kfResults.mean()))
 
-def trainTestLoocv(data):
+def trainTestLoocv(data, classifier):
 
     looCV = LeaveOneOut()
     ricciCurvData = pandas.read_csv(data, header=None)
-    print(ricciCurvData)
+    #print(ricciCurvData)
     df = ricciCurvData.iloc[: , 1:-1]
     labels = ricciCurvData.iloc[:,-1:]
 
-    classifier = RandomForestClassifier(n_estimators=50, random_state=1)
-
-    print("I'm a really slow pc but i'm computing, gimme time D:")
     loocvResults = cross_val_score(estimator=classifier, X=df, y=labels.values.ravel(), scoring='accuracy', cv=looCV)
-    print(loocvResults)
+    #print(loocvResults)
     print("Leave one out cv accuracy: " + str(loocvResults.mean()))
 
-def trainTestHoldOut(data):
+def trainTestHoldOut(data, classifier):
 
     ricciCurvData = pandas.read_csv(data, header=None)
-    print(ricciCurvData)
+    #print(ricciCurvData)
     df = ricciCurvData.iloc[: , 1:-1]
     labels = ricciCurvData.iloc[:,-1:]
-
-    classifier = RandomForestClassifier(n_estimators=50, random_state=1)
 
     dfTrain, dfTest, labelsTrain, labelsTest = train_test_split(df, labels, test_size=0.2)
     classifier.fit(dfTrain, labelsTrain.values.ravel())
     predictions = classifier.predict(dfTest)
     accuracy = accuracy_score(labelsTest, predictions)
-    print("Hold out accuracy: " + str(accuracy))
-    
+    #print("Hold out accuracy: " + str(accuracy))
+
+def trainTestAll(data, classifier):
+    trainTestKFold(data, classifier)
+    trainTestStratKFold(data, classifier)
+    trainTestRepeatKFold(data, classifier)
+    trainTestLoocv(data, classifier)
+    trainTestHoldOut(data, classifier)
     

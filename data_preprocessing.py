@@ -41,8 +41,9 @@ def processImages(dir, labels):
                     image.split()
                     cv2.imwrite(imagePath, resizedImage)
 
-def normalizeDf(df, edges):
-    #BE SURE TO REMOVE DATAFRAME HEADER!!! (Or first entry will not be considered)
+def normalizeDf(data, edges):
+    
+    df = pandas.read_csv(data, header=None)
     images = df.iloc[:, :1]
     norm = df.iloc[: , 1:-1]
     label = df.iloc[:,-1:]
