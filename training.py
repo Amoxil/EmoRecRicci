@@ -1,9 +1,12 @@
 from asyncio.windows_utils import pipe
 from dataclasses import dataclass
 from operator import index
+from unicodedata import category
 from xml.etree.ElementTree import tostring
 import pandas
 import numpy
+from sklearn.exceptions import ConvergenceWarning
+from sklearn.utils._testing import ignore_warnings
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, KFold, cross_val_score, LeaveOneOut, StratifiedKFold, RepeatedKFold
@@ -32,7 +35,8 @@ def trainTestKFold(data, classifier):
     """
     kfResults = cross_val_score(estimator=classifier, X=df, y=labels.values.ravel(), scoring="accuracy", cv=kFold)
     #print(kfResults)
-    print("K-Fold cv accuracy:" + str(kfResults.mean()))
+    score = round((kfResults.mean()*100),2)
+    print("K-Fold cv accuracy: " + str(score))
 
 def trainTestStratKFold(data, classifier):
 
@@ -45,7 +49,8 @@ def trainTestStratKFold(data, classifier):
 
     kfResults = cross_val_score(estimator=classifier, X=df, y=labels.values.ravel(), scoring="accuracy", cv=stratKFold)
     #print(kfResults)
-    print("Stratified K-Fold cv accuracy: " + str(kfResults.mean()))
+    score = round((kfResults.mean()*100),2)
+    print("Stratified K-Fold cv accuracy: " + str(score))
 
 def trainTestRepeatKFold(data, classifier):
 
@@ -57,7 +62,8 @@ def trainTestRepeatKFold(data, classifier):
   
     kfResults = cross_val_score(estimator=classifier, X=df, y=labels.values.ravel(), scoring="accuracy", cv=repKFold)
     #print(kfResults)
-    print("Reapeated K-Fold cv accuracy: " + str(kfResults.mean()))
+    score = round((kfResults.mean()*100),2)
+    print("Reapeated K-Fold cv accuracy: " + str(score))
 
 def trainTestLoocv(data, classifier):
 
@@ -69,7 +75,8 @@ def trainTestLoocv(data, classifier):
 
     loocvResults = cross_val_score(estimator=classifier, X=df, y=labels.values.ravel(), scoring='accuracy', cv=looCV)
     #print(loocvResults)
-    print("Leave one out cv accuracy: " + str(loocvResults.mean()))
+    score = round((loocvResults.mean()*100),2)
+    print("Leave one out cv accuracy: " + str(score))
 
 def trainTestHoldOut(data, classifier):
 
@@ -82,12 +89,13 @@ def trainTestHoldOut(data, classifier):
     classifier.fit(dfTrain, labelsTrain.values.ravel())
     predictions = classifier.predict(dfTest)
     accuracy = accuracy_score(labelsTest, predictions)
-    #print("Hold out accuracy: " + str(accuracy))
+    print("Hold out accuracy: " + str(accuracy))
 
+@ignore_warnings(category=UserWarning)
 def trainTestAll(data, classifier):
     trainTestKFold(data, classifier)
     trainTestStratKFold(data, classifier)
     trainTestRepeatKFold(data, classifier)
     trainTestLoocv(data, classifier)
-    trainTestHoldOut(data, classifier)
-    
+
+#def testImage(data, classifier, image):
