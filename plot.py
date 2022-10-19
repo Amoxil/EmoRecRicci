@@ -16,7 +16,7 @@ df = df.transpose()
 print(df)
 """
 labels = ['Random Forest', 'Nearest Neighbor', 'Naive Bayes', 'Support Vector', 'Decision Tree', 'Multi-layer Perceptron']
-df = pd.read_csv("resultsdlib.csv", index_col=0)
+df = pd.read_csv("curvature_values/resultsmp.csv", index_col=0)
 print(df)
 ax = df.plot.bar()
 ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1),
@@ -27,6 +27,8 @@ for container in ax.containers:
 
 ax.tick_params(labelsize=10)
 ax.set_ylabel('Accuracy in %')
+
+plt.title("Mediapipe landmark extraction")
 
 plt.ylim(25, 100)
 plt.show()
