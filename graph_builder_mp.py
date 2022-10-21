@@ -88,7 +88,7 @@ def showGraph(image):
 
     for faceLandmark in FACE_LANDMARKS:
         cv2.circle(image, nodesPositions[faceLandmark], 2, (0,0,0))
-        cv2.putText(image, str(faceLandmark), nodesPositions[faceLandmark], 0, 0.5, (255,0,0))
+        cv2.putText(image, str(faceLandmark), nodesPositions[faceLandmark], 0, 0.2, (255,0,0))
 
     cv2.imshow("image",image)
     cv2.waitKey(0)
@@ -172,7 +172,10 @@ FACE_EDGES = frozenset([
     (195,4),
     (4,19),
     (19,166),
-    (19,392)
+    (19,392),
+    # Eyebrows
+    (107,336),
+    (55,285)
 ])
 
 

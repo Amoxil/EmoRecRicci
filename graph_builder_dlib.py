@@ -178,7 +178,8 @@ FACE_EDGES = frozenset([
     (65,66),
     (66,67),
     (67,60),
-    
+    #Eyebrows
+    (21,22)
     
 
 ])
