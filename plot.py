@@ -1,6 +1,9 @@
 import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import cross_val_predict, LeaveOneOut
 import numpy as np
 import pandas as pd
+import seaborn as sns
 
 """
 labels = ['Random Forest', 'Nearest Neighbor', 'Naive Bayes', 'Support Vector', 'Decision Tree', 'Multi-layer Perceptron']
@@ -15,21 +18,39 @@ df = pd.DataFrame([euclidean, manhattan, cosine, chebyshev],
 df = df.transpose()
 print(df)
 """
-labels = ['Random Forest', 'Nearest Neighbor', 'Naive Bayes', 'Support Vector', 'Decision Tree', 'Multi-layer Perceptron']
-df = pd.read_csv("curvature_values/resultsmp.csv", index_col=0)
-print(df)
-ax = df.plot.bar()
-ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1),
-          fancybox=True, shadow=True, ncol=5)
+def accPlot(csvLoc):
+    labels = ['Random Forest', 'Nearest Neighbor', 'Naive Bayes', 'Support Vector', 'Decision Tree', 'Multi-layer Perceptron']
+    df = pd.read_csv(csvLoc, index_col=0)
+    print(df)
+    ax = df.plot.bar()
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1),
+            fancybox=True, shadow=True, ncol=5)
 
-for container in ax.containers:
-    ax.bar_label(container)
+    for container in ax.containers:
+        ax.bar_label(container)
 
-ax.tick_params(labelsize=10)
-ax.set_ylabel('Accuracy in %')
+    ax.tick_params(labelsize=10)
+    ax.set_ylabel('Accuracy in %')
 
-plt.title("Mediapipe landmark extraction")
+    plt.title("Mediapipe landmark extraction")
 
-plt.ylim(25, 100)
-plt.show()
+    plt.ylim(25, 100)
+    plt.show()
+
+def confusionPlot(data, classifier):
+    looCV = LeaveOneOut()
+    ricciCurvData = pd.read_csv(data, header=None)
+    #print(ricciCurvData)
+    df = ricciCurvData.iloc[: , 1:-1]
+    labels = ricciCurvData.iloc[:,-1:]
+
+    pred = cross_val_predict(estimator=classifier, X=df, y=labels.values.ravel(), cv=looCV)
+    conf_mat = confusion_matrix(labels.values.ravel(), pred)
+    print(conf_mat)
+    labels = ['Anger','Contempt','Disgust','Fear','Happiness','Neutral','Sadness','Surprise']
+    sns.heatmap(conf_mat, cmap="Greens", annot=True, fmt='g', xticklabels=labels, yticklabels=labels)
+    
+
+    plt.show()
+    
 
