@@ -1,5 +1,6 @@
 from asyncio.windows_utils import pipe
 from dataclasses import dataclass
+from mmap import ACCESS_WRITE
 from operator import index
 from unicodedata import category
 from xml.etree.ElementTree import tostring
@@ -90,6 +91,32 @@ def trainTestHoldOut(data, classifier):
     predictions = classifier.predict(dfTest)
     accuracy = accuracy_score(labelsTest, predictions)
     print("Hold out accuracy: " + str(accuracy))
+
+def trainTestSubInd(data, classifier):
+    ricciCurvData = pandas.read_csv(data, header=None)
+    accuracy = []
+    currN = 5
+    n = str(currN).zfill(3)
+    prefix = 'S' + n
+    while(currN<=999):
+        test = ricciCurvData.loc[ricciCurvData[0].str.startswith(prefix), :]
+        if not test.empty:
+            train = pandas.concat([ricciCurvData,test]).drop_duplicates(keep=False)
+            trainLabels = train.iloc[:,-1:]
+            train = train.iloc[: , 1:-1]
+            testLabels = test.iloc[:,-1:]
+            test = test.iloc[: , 1:-1]
+            classifier.fit(train, trainLabels.values.ravel())
+            predictions = classifier.predict(test)
+            accuracy.append(accuracy_score(testLabels, predictions))
+
+        currN = currN + 1
+        n = str(currN).zfill(3)
+        prefix = 'S' + n
+    
+    arr = numpy.array(accuracy)
+    print(arr)
+    print(arr.mean())
 
 @ignore_warnings(category=UserWarning)
 def trainTestAll(data, classifier):
