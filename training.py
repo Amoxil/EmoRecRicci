@@ -95,27 +95,36 @@ def trainTestHoldOut(data, classifier):
 def trainTestSubInd(data, classifier):
     ricciCurvData = pandas.read_csv(data, header=None)
     accuracy = []
-    currN = 5
+    currN = 1
     n = str(currN).zfill(3)
+    #Prefix obtained: Sxyz where xyz are 0-9
+    #Ex: the prefix of all the images of the first distinct subject is S005
     prefix = 'S' + n
     while(currN<=999):
+        #Gets all the rows that starts with that prefix
         test = ricciCurvData.loc[ricciCurvData[0].str.startswith(prefix), :]
         if not test.empty:
+            #Removes the testing rows from the training set
             train = pandas.concat([ricciCurvData,test]).drop_duplicates(keep=False)
+            #Separates the curvature values from the label
             trainLabels = train.iloc[:,-1:]
             train = train.iloc[: , 1:-1]
             testLabels = test.iloc[:,-1:]
             test = test.iloc[: , 1:-1]
+            #Training of the classifier
             classifier.fit(train, trainLabels.values.ravel())
             predictions = classifier.predict(test)
+            #Saves the accuracy of each subject tested
             accuracy.append(accuracy_score(testLabels, predictions))
 
+        #Gets the next distinct subject
         currN = currN + 1
         n = str(currN).zfill(3)
         prefix = 'S' + n
     
     arr = numpy.array(accuracy)
     print(arr)
+    #Print of the average accuracy
     print(arr.mean())
 
 @ignore_warnings(category=UserWarning)
