@@ -46,6 +46,51 @@ def buildGraph(image, distType):
 
     return graph
 
+def buildFCGraph(image, distType):
+    height, width, _ = image.shape
+    faceModule = mediapipe.solutions.face_mesh
+    processedImage = faceModule.FaceMesh(static_image_mode=True).process(image)
+    if(processedImage.multi_face_landmarks is None):
+        return
+    graph = networkx.Graph()
+
+    #Adds node to the graph
+    for faceLandmark in FC_FACE_LANDMARKS:
+        #print("have this landmark!!! HYA!!" + landmark)
+        landmark =  processedImage.multi_face_landmarks[0].landmark[faceLandmark]
+        pos = (int(landmark.x * width), int(landmark.y * height))
+        graph.add_node(faceLandmark, pos=pos)
+
+    nodesPosition = networkx.get_node_attributes(graph,"pos")
+
+    flm = []
+
+    print(FC_FACE_LANDMARKS)
+    for fl in FC_FACE_LANDMARKS:
+        flm.append(fl)
+
+    for i in range(0,len(FC_FACE_LANDMARKS)):
+        for j in range(i+1,len(FC_FACE_LANDMARKS)):
+            match distType:
+                case 'manhattan':
+                    weight = distance.cityblock(nodesPosition[flm[i]], nodesPosition[flm[j]])
+                case 'euclidean':
+                    weight = distance.euclidean(nodesPosition[flm[i]], nodesPosition[flm[j]])
+                case 'cosine':
+                    weight = distance.cosine(nodesPosition[flm[i]], nodesPosition[flm[j]])
+                case 'chebyshev':
+                    weight = distance.chebyshev(nodesPosition[flm[i]], nodesPosition[flm[j]])
+                case _:
+                    weight = distance.euclidean(nodesPosition[flm[i]], nodesPosition[flm[j]])
+  
+            if(weight != 0):
+                graph.add_edge(flm[i],flm[j], weight = weight)   
+            else:
+                return 
+    
+    return graph
+    #Adds edges to the graph
+
 def buildFormanRicciGraph(image, distType):
 
     if(image is None):
@@ -93,6 +138,23 @@ def showGraph(image):
     cv2.imshow("image",image)
     cv2.waitKey(0)
 
+def showFCGraph(image):
+    graph = buildFCGraph(image, "euclidean")
+
+    if(graph is None):
+        return
+    
+    nodesPositions = networkx.get_node_attributes(graph,"pos")
+
+    for faceEdge in graph.edges:
+        cv2.line(image, nodesPositions[faceEdge[0]], nodesPositions[faceEdge[1]], (0,0,255), 1)
+
+    for faceLandmark in FC_FACE_LANDMARKS:
+        cv2.circle(image, nodesPositions[faceLandmark], 2, (0,0,0))
+        cv2.putText(image, str(faceLandmark), nodesPositions[faceLandmark], 0, 0.2, (255,0,0))
+
+    cv2.imshow("image",image)
+    cv2.waitKey(0)
 
 FACE_LANDMARKS = frozenset([
     # Lips.
@@ -176,6 +238,37 @@ FACE_EDGES = frozenset([
     # Eyebrows
     (107,336),
     (55,285)
+])
+
+FC_FACE_LANDMARKS = frozenset([
+    # Lips.
+    61,
+    0,
+    292,
+    17,
+    61,
+    # Left eye.
+    362,
+    386,
+    263,
+    374,
+    362,
+    # Left eyebrow.
+    70,
+    105,
+    107,
+    # Right eye.
+    33,
+    159,
+    133,
+    145,
+    # Right eyebrow.
+    336,
+    334,
+    300,
+    #Nose
+    0,
+    4
 ])
 
 
