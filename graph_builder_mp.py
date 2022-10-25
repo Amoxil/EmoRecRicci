@@ -64,8 +64,7 @@ def buildFCGraph(image, distType):
     nodesPosition = networkx.get_node_attributes(graph,"pos")
 
     flm = []
-
-    print(FC_FACE_LANDMARKS)
+    
     for fl in FC_FACE_LANDMARKS:
         flm.append(fl)
 
@@ -116,6 +115,20 @@ def buildOllivierRicciGraph(image, distType):
         return
     #Computes Ollivier-Ricci curv
     ricciCurvGraph = OllivierRicci(graph)
+    ricciCurvGraph.compute_ricci_curvature()
+    return ricciCurvGraph
+
+def buildFormanRicciFCGraph(image, distType):
+
+    if(image is None):
+        return
+
+    graph = buildFCGraph(image, distType)
+
+    if(graph is None):
+        return
+    #Computes Forman-Ricci curv
+    ricciCurvGraph = FormanRicci(graph)
     ricciCurvGraph.compute_ricci_curvature()
     return ricciCurvGraph
 
