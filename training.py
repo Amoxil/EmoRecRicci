@@ -6,12 +6,13 @@ from unicodedata import category
 from xml.etree.ElementTree import tostring
 import pandas
 import numpy
+from sklearn.metrics import confusion_matrix
 from sklearn.exceptions import ConvergenceWarning
 from sklearn.utils._testing import ignore_warnings
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, KFold, cross_val_score, LeaveOneOut, StratifiedKFold, RepeatedKFold
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, classification_report
 
 def trainTestKFold(data, classifier):
 
@@ -90,11 +91,14 @@ def trainTestHoldOut(data, classifier):
     classifier.fit(dfTrain, labelsTrain.values.ravel())
     predictions = classifier.predict(dfTest)
     accuracy = accuracy_score(labelsTest, predictions)
+    
     print("Hold out accuracy: " + str(accuracy))
 
 def trainTestSubInd(data, classifier):
     ricciCurvData = pandas.read_csv(data, header=None)
     accuracy = []
+    preds = []
+    real = []
     currN = 1
     n = str(currN).zfill(3)
     #Prefix obtained: Sxyz where xyz are 0-9
@@ -116,18 +120,31 @@ def trainTestSubInd(data, classifier):
             predictions = classifier.predict(test)
             #Saves the accuracy of each subject tested
             accuracy.append(accuracy_score(testLabels, predictions))
+            for p in predictions:
+                preds.append(p)
+            for r in testLabels.values.ravel():
+                real.append(r)
+
 
         #Gets the next distinct subject
         currN = currN + 1
         n = str(currN).zfill(3)
         prefix = 'S' + n
     
-    arr = numpy.array(accuracy)
-    print(arr)
-    #Print of the average accuracy
-    print(arr.mean())
+    acc = numpy.array(accuracy)
 
-@ignore_warnings(category=UserWarning)
+    print(classification_report(real, preds))
+    conf_mat = confusion_matrix(real, preds)
+    print(conf_mat)
+
+    #print acc
+    print("Accuracy: " + str(acc.mean()))
+    print("Standard deviation: " + str(acc.std()))
+
+    return conf_mat
+
+
+#@ignore_warnings(category=UserWarning)
 def trainTestAll(data, classifier):
     trainTestKFold(data, classifier)
     trainTestStratKFold(data, classifier)
