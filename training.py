@@ -94,6 +94,7 @@ def trainTestHoldOut(data, classifier):
     
     print("Hold out accuracy: " + str(accuracy))
 
+#@ignore_warnings(category=UserWarning)
 def trainTestSubInd(data, classifier):
     ricciCurvData = pandas.read_csv(data, header=None)
     accuracy = []
@@ -138,8 +139,9 @@ def trainTestSubInd(data, classifier):
     print(conf_mat)
 
     #print acc
-    print("Accuracy: " + str(acc.mean()))
     print("Standard deviation: " + str(acc.std()))
+
+    print(numpy.round(acc,2))
 
     return conf_mat
 
