@@ -41,20 +41,25 @@ def processImages(dir, labels):
                     image.split()
                     cv2.imwrite(imagePath, resizedImage)
 
-def normalizeDf(data, edges):
+def normalizeDf(path, data):
+
+    loc = os.path.join(path, data)
     
-    df = pandas.read_csv(data, header=None)
+    df = pandas.read_csv(loc, header=None)
     images = df.iloc[:, :1]
     norm = df.iloc[: , 1:-1]
     label = df.iloc[:,-1:]
+    cols = len(norm.columns)
 
 
     scaler = MinMaxScaler()
     #print(norm)
     norm = scaler.fit_transform(norm)
-    norm = pandas.DataFrame(norm, columns=numpy.arange(len(edges)))
+    norm = pandas.DataFrame(norm, columns=numpy.arange(cols))
     #print(images)
     result = pandas.concat([images, norm], axis=1, join="inner")
     result = pandas.concat([result, label], axis=1, join="inner")
     #print(result)
-    result.to_csv('normalizedData.csv', index=False, header=False)
+
+    normDataLoc = os.path.join(path, data[:-4] + "Norm.csv")
+    result.to_csv(normDataLoc, index=False, header=False)

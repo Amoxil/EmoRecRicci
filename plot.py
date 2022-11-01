@@ -8,18 +8,42 @@ import seaborn as sns
 from sklearn.metrics import accuracy_score, plot_precision_recall_curve, classification_report
 
 """
-labels = ['Random Forest', 'Nearest Neighbor', 'Naive Bayes', 'Support Vector', 'Decision Tree', 'Multi-layer Perceptron']
-euclidean = [75.9, 74.7, 66.4, 79.2, 59.9, 80.1]
-manhattan = [78.8, 77, 66.7, 80.5, 65.3, 81.3]
-cosine = [82, 69.1, 43.4, 79.9, 69.8, 81.6]
-chebyshev = [77.7, 75, 70.9, 80, 65.8, 80.3]
-index = ['Euclidean', "Manhattan", "Cosine", "Chebyshev"]
-df = pandas.DataFrame([euclidean, manhattan, cosine, chebyshev],
-                  columns=labels, index=index)
-
-df = df.transpose()
-print(df)
+accuracy  = [81, 81, 80, 80, 80, 80, 72]
+precision = [74, 75, 71, 69, 76, 70, 64]
+f1        = [75, 75, 73, 72, 73, 72, 64]
 """
+
+
+
+
+def accPartPlot():
+
+    labels = ['Default','Nose', 'Eyes','Left eye + eyebrow', 'Right eye + eyebrow', 'Eyebrows', 'Lips']
+    accuracy  = [87, 87, 85, 85, 85, 85, 81]
+    precision = [84, 82, 77, 80, 80, 80, 75]
+    f1        = [84, 84, 80, 81, 81, 81, 77]
+    index = ['Accuracy', "Precision", "F1"]
+    df = pandas.DataFrame([accuracy, precision, f1],
+                    columns=labels, index=index)
+
+    df = df.transpose()
+    
+    print(df)
+    ax = df.plot.bar()
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1),
+            fancybox=True, shadow=True, ncol=5)
+
+    for container in ax.containers:
+        ax.bar_label(container)
+
+    ax.tick_params(labelsize=10)
+    ax.set_ylabel('Score in %')
+
+    plt.title("FC - Subject independent testing SVM")
+
+    plt.ylim(50, 100)
+    plt.show()
+
 def accPlot(csvLoc):
     labels = ['Random Forest', 'Nearest Neighbor', 'Naive Bayes', 'Support Vector', 'Decision Tree', 'Multi-layer Perceptron']
     df = pandas.read_csv(csvLoc, index_col=0)
@@ -38,6 +62,7 @@ def accPlot(csvLoc):
 
     plt.ylim(25, 100)
     plt.show()
+
 
 def confusionPlot(data, classifier):
     looCV = LeaveOneOut()

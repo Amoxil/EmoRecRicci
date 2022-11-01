@@ -1,4 +1,3 @@
-from statistics import LinearRegression
 import data_preprocessing
 import graph_builder_mp
 import feature_extraction
@@ -56,8 +55,13 @@ data_preprocessing.normalizeDf("manhattan.csv", edges)
 feature_extraction.FCExtract("C:\\Users\\Raffocs\\Desktop\\CK+", ["anger", "neutral", "contempt", "disgust", "fear", "happiness", "sadness", "surprise"], "euclidean")
 """
 
-#training.trainTestSubInd("curvature_values/fc/chebyshevNorm.csv", svc) #0.87
-training.trainTestSubInd("curvature_values/fc/euclideanNorm.csv", svc) #0.87
+#feature_extraction.FCExtract("CK+", ["anger", "neutral", "contempt", "disgust", "fear", "happiness", "sadness", "surprise"], "euclidean")
+#data_preprocessing.normalizeDf("curvature_values/fc_enhanced","euclidean.csv")
+plot.accPartPlot()
+
+
+#training.trainTestSubInd("curvature_values/fc_enhanced/euclideanNorm.csv", svc) #0.87
+#training.trainTestSubInd("curvature_values/def/euclideanNorm.csv", svc) #0.87
 #training.trainTestSubInd("curvature_values/fc/manhattanNorm.csv", svc) 0.86
 #training.trainTestSubInd("curvature_values/fc/manhattanNorm.csv", mlp) 0.86, best AVG(0.59,0.84)
 

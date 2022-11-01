@@ -45,7 +45,7 @@ def buildGraph(image, distType):
             if(weight != 0):
                 graph.add_edge(faceEdge[0],faceEdge[1], weight = weight) 
             else:
-                return  
+                graph.add_edge(faceEdge[0],faceEdge[1], weight = 0.001)   
 
     return graph
 
