@@ -1,11 +1,10 @@
-from ctypes import sizeof
 import os
 import shutil
 import graph_builder_mp
 import graph_builder_dlib
 import pandas
 import cv2
-import itertools
+
 
 
 def mpExtract(dir, labels, distType):
@@ -105,7 +104,6 @@ def FCExtract(dir, labels, distType):
     if not os.path.exists(os.path.join(dir, "err")):
         os.makedirs(os.path.join(dir, "err"))
 
-    #Edges are not actually aligned with the data, columns=edges.union(["label"]) is just for sizing purpuses, will get removed in csv
     ricciCurvData = pandas.DataFrame(columns=cols) 
     i=0
     print(cols)

@@ -1,11 +1,10 @@
-from asyncio.windows_utils import pipe
-from dataclasses import dataclass
-from mmap import ACCESS_WRITE
-from operator import index
-from unicodedata import category
-from xml.etree.ElementTree import tostring
+
+from cProfile import label
+import time
+from tkinter import Y
 import pandas
 import numpy
+from imblearn.over_sampling import SMOTE
 from sklearn.metrics import confusion_matrix
 from sklearn.exceptions import ConvergenceWarning
 from sklearn.utils._testing import ignore_warnings
@@ -13,6 +12,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, KFold, cross_val_score, LeaveOneOut, StratifiedKFold, RepeatedKFold
 from sklearn.metrics import accuracy_score, precision_score, recall_score, classification_report
+
 
 def trainTestKFold(data, classifier):
 
@@ -75,10 +75,36 @@ def trainTestLoocv(data, classifier):
     df = ricciCurvData.iloc[: , 1:-1]
     labels = ricciCurvData.iloc[:,-1:]
 
-    loocvResults = cross_val_score(estimator=classifier, X=df, y=labels.values.ravel(), scoring='accuracy', cv=looCV)
-    #print(loocvResults)
-    score = round((loocvResults.mean()*100),2)
-    print("Leave one out cv accuracy: " + str(score))
+    real = []
+    preds = []
+    accuracy = []
+    arr = []
+
+    sm = SMOTE()
+    X_res, y_res = sm.fit_resample(df, labels.values.ravel())
+
+    for i in range(0, len(X_res)):
+        #gets the testing row
+        test = X_res.iloc[i]
+        #Removes the testing row from the training set
+        train = X_res.drop(X_res.index[i])
+        #Separates the curvature values from the label
+        testLabel = y_res[i]
+        trainLabels = numpy.delete(y_res, i)
+        #Training of the classifier
+        classifier.fit(train, trainLabels)
+        
+        arr.append(test)
+        prediction = classifier.predict(arr)
+        arr.clear()
+        #Saves the accuracy of each subject tested
+        preds.append(prediction)
+        real.append(testLabel)
+    
+    print(classification_report(real, preds))
+    conf_mat = confusion_matrix(real, preds)
+    print(conf_mat)
+    print("Loocv")
 
 def trainTestHoldOut(data, classifier):
 
@@ -96,6 +122,7 @@ def trainTestHoldOut(data, classifier):
 
 #@ignore_warnings(category=UserWarning)
 def trainTestSubInd(data, classifier):
+    start_time = time.time()
     ricciCurvData = pandas.read_csv(data, header=None)
     accuracy = []
     preds = []
@@ -142,9 +169,9 @@ def trainTestSubInd(data, classifier):
     print("Standard deviation: " + str(acc.std()))
 
     print(numpy.round(acc,2))
+    print("Running time: %s seconds" % round(time.time() - start_time, 2))
 
     return conf_mat
-
 
 #@ignore_warnings(category=UserWarning)
 def trainTestAll(data, classifier):

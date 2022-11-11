@@ -199,6 +199,7 @@ FACE_EDGES = frozenset([
     (6,195),(195,4),(4,19),(19,166),(19,392),
     # Eyebrows
     (107,336),(55,285)
+
 ])
 
 FC_FACE_LANDMARKS = frozenset([
@@ -214,6 +215,7 @@ FC_FACE_LANDMARKS = frozenset([
     46, 53, 52, 65, 55, 70, 63, 105, 66, 107,
     # Nose.
     6, 195, 4, 166, 19, 392
+
 ])
 
 

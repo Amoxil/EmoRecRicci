@@ -1,0 +1,7 @@
+,Euclidean,Manhattan,Cosine,Chebyshev
+Random Forest,75.9,78.8,81.7,77.5
+Nearest Neighbor,74.7,76.9,68.7,75.0
+Naive Bayes,65.4,65.9,42.8,70.9
+Support Vector,79.1,80.4,79.3,79.9
+Decision Tree,59.9,64.7,69.5,65.8
+Multi-layer Perceptron,80.3,81.3,81.6,80.3
