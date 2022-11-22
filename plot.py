@@ -117,30 +117,13 @@ def confusionPlotSbjInd(data, classifier):
     return conf_mat
 
 def precisionRecall(conf_mat, labels=None):
+    #outdated, see subjInd testing in traintest module
 
-    precision=[]
-    recall=[]
-    tpfp = 0
 
     if(labels==None):
         labels = ['Anger','Contempt','Disgust','Fear','Happiness','Neutral','Sadness','Surprise']
-    sns.heatmap(conf_mat, cmap="Greens", annot=True, fmt='g', xticklabels=labels, yticklabels=labels)
-    for i in range(0, len(labels)):
-            for j in range(0, len(labels)):
-                tpfp =  tpfp + conf_mat[j][i]
-            precision.append(conf_mat[i][i]/tpfp)
-            tpfp = 0
-    
-    for i in range(0, len(labels)):
-            for j in range(0, len(labels)):
-                tpfp =  tpfp + conf_mat[i][j]
-            recall.append(conf_mat[i][i]/tpfp)
-            tpfp = 0
-    
-    print(precision)
-    print(recall)
-
-    classification_report
+    sns.heatmap(conf_mat, cmap=sns.color_palette("rocket_r", as_cmap=True), annot=True, fmt='g', xticklabels=labels, yticklabels=labels)
+ 
 
     plt.show()
 
